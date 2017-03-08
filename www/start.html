@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+  <link href="css/ratchet.css" rel="stylesheet">
+
+  <script type="text/javascript" src="cordova.js"></script>
+
+  <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+  <script src="js/ratchet.js"></script>
+
+  <script type="text/javascript" src="js/jquery.touchSwipe.js"></script>
+
+  <style>
+    .kerekitve {
+      -webkit-border-top-right-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    .lapkerekitve {
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+    }
+
+    @font-face {
+      font-family: betutipus;
+      src: url('fonts/new_academy.ttf');
+    }
+
+    body, div, .noselect {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-callout: none;
+      -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+
+    *:not(input):not(textarea) {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-callout: none;
+      -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+
+    html {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-callout: none;
+      -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+
+
+    img {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout:none;
+      -webkit-tap-highlight-color:rgba(0,0,0,0);
+    }
+  </style>
+
+  <script type="text/javascript">
+
+    var storage;
+    var howtoexit, exit_count=0;
+    var skaleid="";
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+
+      storage = window.localStorage;
+
+      howtoexit = storage.getItem("howtoexit");
+      if (!howtoexit) {
+        howtoexit=0;
+        storage.setItem("howtoexit",howtoexit);
+      }
+      howtoexit = parseInt(howtoexit);
+
+      skaleid = storage.getItem("skaleid");
+      if (!skaleid) {
+        skaleid="";
+      }
+
+      $('#mainpage').delay(1000).fadeIn(500);
+
+      bt_search();
+
+      // To exit: swipe UP 3 times with 2 fingers
+      $("body").swipe({
+        swipe:function(event, direction, distance, duration, fingerCount){
+          if (fingerCount==2 && direction=='up') {
+            exit_to_home();
+          }
+        },
+        fingers:'all',
+        allowPageScroll:'none',
+        preventDefaultEvents:false
+      });
+
+    }
+
+
+    function how_to_exit() {
+      if (howtoexit<2) {
+        navigator.notification.confirm(
+          txt_kilepes,
+          function(idx) {
+            if (idx==2) {
+              storage.setItem("howtoexit",2);
+            }
+          },
+          txt_kilep,
+          [txt_ujra,txt_megertette]
+        );
+      }
+    }
+
+    function exit_to_home() {
+      exit_count+=1;
+      if (exit_count==3) {
+        exit_count=0;
+        navigator.notification.confirm(
+          txt_mitakar,
+          function(idx) {
+            if (idx==1) {
+              disconn();
+              top.location='index.html';
+            }
+            else if (idx==3) {
+              disconn();
+              top.location='start.html';
+            }
+          },
+          txt_mit_valaszt,
+          [txt_mit_kilep,txt_mit_folyt,txt_mit_ujat]
+        );
+      }
+    }
+
+    function error_fn() {
+    }
+
+    function success_fn() {
+    }
+
+    //======================================================================================================================================================
+
+    var xserv, xcha, actual_value, grams, conn_timer;
+
+    function bt_search() {
+      $('#infodiv').append(txt_bt_search+'<br>');
+
+      ble.startScan([], function(device) {
+          if (device.name=='Skale' && !indult) {
+            skaleid = device.id;
+            storage.setItem("skaleid",skaleid);
+            $('#infodiv').append(skaleid+'<br>');
+            ble.stopScan( function() {
+              connecting();
+            }, error_fn);
+          }
+      }, error_fn);
+      setTimeout(stop_search,30000); // we only search for 30 seconds
+    }
+
+    function connecting() {
+      clearTimeout(conn_timer);
+
+      $('#infodiv').append(txt_connecting+'<br>');
+
+      ble.connect(skaleid, function() {
+        stop_search();
+        $('#infodiv').html(txt_kapcsolodva+'<br>');
+        watch_skale();
+      }, function() {
+          conn_timer = setTimeout(connecting,2000);
+      });
+    }
+
+    function stop_search() {
+      clearTimeout(conn_timer);
+      ble.stopScan(success_fn,error_fn);
+      if (skaleid=="") {
+        alert(txt_nemelerheto);
+      }
+    }
+
+    function disconn() {
+      ble.stopNotification(skaleid, xserv, xcha, success_fn, error_fn);
+      ble.disconnect(skaleid);
+    }
+
+    function watch_skale(serv,cha) {
+      bt_service = 'ff08';
+      bt_channel = 'ef81';
+      ble.startNotification(skaleid, bt_service, bt_channel, function(what) {
+        
+        // Here we convert the data received from Skale:
+        var data = new Uint8Array(what);
+        actual_value = data[1]+256*data[2];
+
+        // If value is no more than 2kg:
+        if (actual_value<20000) {
+
+          grams = actual_value/10;
+
+          if (grams<0) {
+            grams=0;
+          }
+          if (grams<2000) {
+            $('#weight_div').html('<br><div id="gr" style="font-size:36pt; color:white; z-index:6000">'+grams+'g</div>'+'<br><br>');
+          }
+
+        }
+      }, error_fn);
+    }
+
+  </script>
+
+</head>
+
+
+<body style="background:#000000; font-size:20pt; width:100%; height:100%; overflow:hidden; position:fixed; margin:0px; padding:0px; border:0px; font-family:Helvetica">
+
+  <div id="mainpage" style="display:none; width:100%; height:100%; background:#000000; color:white; padding:20px">
+    <div id="weight_div" style="width:100%; height:50%; text-align:center; font-size:30pt; line-height:36pt; background:#000000; color:white"></div>
+    <div id="infodiv" style="width:100%; height:50%; text-align:center; font-size:24pt; line-height:26pt; background:#000000; color:white; padding-top:30px"></div>
+  </div>
+   
+</body>
+
+</html>

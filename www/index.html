@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Skale DEMO</title>
+
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+    <link href="css/ratchet.css" rel="stylesheet">
+    <link href="css/purchased.css" rel="stylesheet">
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/ratchet.js"></script>
+
+    <script type="text/javascript" src="languages/eng.js"></script>
+
+    <style>
+      @font-face {
+        font-family: enigma;
+        src: url('fonts/enigma.ttf');
+      }
+
+      .noselect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-callout: none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+      }
+
+      *:not(input):not(textarea) {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-callout: none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+      }
+
+      html {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-callout: none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+      }
+
+
+      img {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout:none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
+      }
+
+      .content {
+        background:transparent;
+      }
+
+      ::-webkit-scrollbar { 
+        display: none;
+      }
+
+    </style>
+
+  <script type="text/javascript" charset="utf-8">
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+  
+    function onDeviceReady() {
+      $('body').fadeIn();
+    }
+
+    function start() {
+      top.location='start.html';
+    }
+
+  </script>
+
+</head>
+
+
+  <body style="display:none; background-color:#fbf5ee; width:100%; height:100%; padding:0px; margin:0px">
+
+      <!-- =========================================================================================================== -->
+      <!-- ==========================================   HOMEPAGE   =================================================== -->
+      <!-- =========================================================================================================== -->
+
+      <nav class="bar bar-tab">
+        <a class="tab-item" onClick="start()">
+          <span class="icon icon-play"></span>
+          <span class="tab-label menu2">Start</span>
+        </a>
+      </nav>
+
+      <header class="bar bar-nav">
+        <h1 class="title menu1">Skale DEMO</h1>
+      </header>
+
+      <div class="content center" style="text-align:center; width:100%; height:100%">
+
+        <div style="height:40px"></div>
+        <div id="txt_cime2" style="font-size:28pt; font-family:enigma">Skale DEMO</div>
+        <div style="height:15px"></div>
+        <div id="txt_alcim" style="font-size:14pt; font-style:italic"></div>
+        <div style="height:30px"></div>
+        <img src="img/ikon.png" width="150" border="0" alt="" style="border-radius: 20px; box-shadow: 0px 0px 10px #373737">
+        <div style="height:30px"></div>
+        <button id="txt_start_magic" class="btn btn-positive" style="font-size:20pt; padding:10px; font-weight:bold" onClick="start()">START MAGIC TRICK</button>
+        <div style="height:60px"></div>
+      </div>
+
+  </body>
+</html>
