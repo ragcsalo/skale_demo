@@ -75,8 +75,6 @@
 
     function onDeviceReady() {
 
-alert('1');
-
       storage = window.localStorage;
 
       howtoexit = storage.getItem("howtoexit");
@@ -91,8 +89,6 @@ alert('1');
         skaleid="";
       }
 
-alert('2');
-
       bt_search();
 
       // To exit: swipe UP 3 times with 2 fingers
@@ -106,9 +102,6 @@ alert('2');
         allowPageScroll:'none',
         preventDefaultEvents:false
       });
-
-alert('3');
-
 
     }
 
@@ -168,24 +161,25 @@ alert('3');
             skaleid = device.id;
             alert('Skale ID: '+skaleid);
             storage.setItem("skaleid",skaleid);
-            ble.stopScan( function() {
-              connecting();
-            }, error_fn);
+            connect_to_skale();
+            ble.stopScan(success_fn,error_fn);
           }
       }, error_fn);
       setTimeout(stop_search,30000); // we only search for 30 seconds
     }
 
-    function connecting() {
+    function connect_to_skale() {
+      alert('connecting...');
       clearTimeout(conn_timer);
 
-      $('#infodiv').append(txt_kapcsolodik+'<br>');
+      //$('#infodiv').append('connecting...<br>');
 
       ble.connect(skaleid, function() {
-        $('#infodiv').html(txt_kapcsolodva+'<br>');
+        alert('CONNECTED');
+        //$('#infodiv').html('CONNECTED<br>');
         watch_skale();
       }, function() {
-          conn_timer = setTimeout(connecting,2000);
+          conn_timer = setTimeout(connect_to_skale,2000);
       });
     }
 
@@ -193,7 +187,7 @@ alert('3');
       clearTimeout(conn_timer);
       ble.stopScan(success_fn,error_fn);
       if (skaleid=="") {
-        alert(txt_nemelerheto);
+        alert('Skale not found.');
       }
     }
 
@@ -233,8 +227,8 @@ alert('3');
 <body style="background:#000000; font-size:20pt; width:100%; height:100%; overflow:hidden; position:fixed; margin:0px; padding:0px; border:0px; font-family:Helvetica">
 
   <div id="mainpage" style="display:none; width:100%; height:100%; background:#000000; color:white; padding:20px">
-    <div id="weight_div" style="width:100%; height:50%; text-align:center; font-size:30pt; line-height:36pt; background:#000000; color:white"></div>
-    <div id="infodiv" style="width:100%; height:50%; text-align:center; font-size:24pt; line-height:26pt; background:#000000; color:white; padding-top:30px"></div>
+    <div id="weight_div" style="width:100%; height:50%; text-align:center; font-size:30pt; line-height:36pt; background:#000000; color:white">starting</div>
+    <div id="infodiv" style="width:100%; height:50%; text-align:center; font-size:24pt; line-height:26pt; background:#000000; color:white; padding-top:30px">?</div>
   </div>
    
 </body>
