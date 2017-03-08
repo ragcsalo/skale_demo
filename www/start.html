@@ -176,7 +176,8 @@
 
       ble.connect(skaleid, function() {
         alert('CONNECTED');
-        //$('#infodiv').html('CONNECTED<br>');
+        $('#infodiv').html('CONNECTED<br>');
+        $('#weight_div').html('CONNECTED<br>');
         watch_skale();
       }, function() {
           conn_timer = setTimeout(connect_to_skale,2000);
@@ -232,7 +233,7 @@
 
 <body style="background:#000000; font-size:20pt; width:100%; height:100%; overflow:hidden; position:fixed; margin:0px; padding:0px; border:0px; font-family:Helvetica">
 
-  <div id="mainpage" style="display:none; width:100%; height:100%; background:#000000; color:white; padding:20px">
+  <div id="mainpage" style="width:100%; height:100%; background:#000000; color:white; padding:20px">
     <div id="weight_div" style="width:100%; height:50%; text-align:center; font-size:30pt; line-height:36pt; background:#000000; color:white">starting</div>
     <div id="infodiv" style="width:100%; height:50%; text-align:center; font-size:24pt; line-height:26pt; background:#000000; color:white; padding-top:30px">?</div>
   </div>
