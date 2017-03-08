@@ -161,14 +161,13 @@ alert('3');
     var bt_service='ff08', bt_channel='ef81', actual_value, grams, conn_timer;
 
     function bt_search() {
-      alert('search');
       $('#infodiv').append(txt_keres+'<br>');
 
       ble.startScan([], function(device) {
           if (device.name=='Skale') {
             skaleid = device.id;
+            alert('Skale ID: '+skaleid);
             storage.setItem("skaleid",skaleid);
-            $('#infodiv').append(skaleid+'<br>');
             ble.stopScan( function() {
               connecting();
             }, error_fn);
@@ -183,7 +182,6 @@ alert('3');
       $('#infodiv').append(txt_kapcsolodik+'<br>');
 
       ble.connect(skaleid, function() {
-        stop_search();
         $('#infodiv').html(txt_kapcsolodva+'<br>');
         watch_skale();
       }, function() {
@@ -204,7 +202,7 @@ alert('3');
       ble.disconnect(skaleid);
     }
 
-    function watch_skale(serv,cha) {
+    function watch_skale() {
       ble.startNotification(skaleid, bt_service, bt_channel, function(result) {
         
         // Here we convert the data received from Skale:
