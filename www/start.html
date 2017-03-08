@@ -66,7 +66,7 @@
   <script type="text/javascript">
 
     var skaleid="";
-    var bt_service='ff08', bt_channel='ef81', actual_value, grams, conn_timer;
+    var bt_service='ff08', bt_channel='ef81', actual_value, grams, conn_timer, dots=0;
 
 
     document.addEventListener("deviceready", onDeviceReady, false);
@@ -139,7 +139,7 @@
       clearTimeout(conn_timer);
 
       ble.connect(skaleid, function() {
-        $('#infodiv').append(' and<br>CONNECTED');
+        $('#infodiv').append(' and<br>CONNECTED<br><div id="dots"></div>');
         $('#weight_div').html('0g');
         watch_skale();
       }, function() {
@@ -162,10 +162,17 @@
     }
 
     function watch_skale() {
-      $('#infodiv').append('<br>+');
+      $('#infodiv').append('<br>');
       ble.startNotification(skaleid, bt_service, bt_channel, function(result) {
         
-        $('#infodiv').append('.');
+        dots+=1;
+        if (dots<=10) {
+          $('#dots').append('.');
+        }
+        else {
+          $('#dots').html('.');
+          dots=1;
+        }
         
         // Here we convert the data received from Skale:
         var data = new Uint8Array(result);
@@ -178,6 +185,9 @@
             grams=0;
           }
           $('#weight_div').html(grams+'g');
+          if (grams==0) {
+            dots=0;
+          }
         }
         else {
           $('#weight_div').html('ERROR');
