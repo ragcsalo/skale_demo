@@ -164,7 +164,7 @@ alert('3');
       $('#infodiv').append(txt_bt_search+'<br>');
 
       ble.startScan([], function(device) {
-          if (device.name=='Skale' && !indult) {
+          if (device.name=='Skale') {
             skaleid = device.id;
             storage.setItem("skaleid",skaleid);
             $('#infodiv').append(skaleid+'<br>');
