@@ -90,20 +90,19 @@
 
 
     function exit_to_home() {
+      disconn();
       navigator.notification.confirm(
         'What do you want to do?',
         function(idx) {
           if (idx==1) {
-            disconn();
             top.location='index.html';
           }
-          else if (idx==3) {
-            disconn();
+          else if (idx==2) {
             top.location='start.html';
           }
         },
         'Please select',
-        ['EXIT TO MENU','Continue','Restart']
+        ['EXIT TO MENU','Restart']
       );
     }
 
@@ -117,17 +116,23 @@
 
 
     function bt_search() {
-      $('#infodiv').append('Searching...<br>');
+      if (skaleid=="") {
+        $('#infodiv').append('Searching...<br>');
 
-      ble.startScan([], function(device) {
-          if (device.name=='Skale') {
-            skaleid = device.id;
-            $('#infodiv').html('Skale found');
-            connect_to_skale();
-            ble.stopScan(success_fn,error_fn);
-          }
-      }, error_fn);
-      setTimeout(stop_search,30000); // we only search for 30 seconds
+        ble.startScan([], function(device) {
+            if (device.name=='Skale') {
+              skaleid = device.id;
+              $('#infodiv').html('Skale found');
+              connect_to_skale();
+              ble.stopScan(success_fn,error_fn);
+            }
+        }, error_fn);
+        setTimeout(stop_search,30000); // we only search for 30 seconds
+      }
+      else {
+        $('#infodiv').html('Skale found');
+        connect_to_skale();
+      }
     }
 
     function connect_to_skale() {
@@ -153,7 +158,7 @@
     function disconn() {
       ble.stopNotification(skaleid, bt_service, bt_channel, success_fn, error_fn);
       ble.disconnect(skaleid);
-      $('#infodiv').html('disconnected');
+      $('#infodiv').html('Skale disconnected');
     }
 
     function watch_skale() {
@@ -165,16 +170,14 @@
 
         // If value is no more than 2kg:
         if (actual_value<20000) {
-
           grams = actual_value/10;
-
           if (grams<0) {
             grams=0;
           }
-          if (grams<2000) {
-            $('#weight_div').html(grams+'g');
-          }
-
+          $('#weight_div').html(grams+'g');
+        }
+        else {
+          $('#weight_div').html('ERROR');
         }
       }, error_fn);
     }
