@@ -156,9 +156,9 @@
     }
 
     function disconn() {
-      ble.stopNotification(skaleid, bt_service, bt_channel, success_fn, error_fn);
+      //ble.stopNotification(skaleid, bt_service, bt_channel, success_fn, error_fn);
       ble.disconnect(skaleid);
-      $('#infodiv').html('Skale disconnected');
+      $('#infodiv').html('<br><br><br>Skale disconnected');
     }
 
     function watch_skale() {
