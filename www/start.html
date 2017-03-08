@@ -116,30 +116,24 @@
 
 
     function bt_search() {
-      if (skaleid=="") {
-        $('#infodiv').append('Searching...<br>');
+      $('#infodiv').html('Searching...');
 
-        ble.startScan([], function(device) {
-            if (device.name=='Skale') {
-              skaleid = device.id;
-              $('#infodiv').html('Skale found');
-              connect_to_skale();
-              ble.stopScan(success_fn,error_fn);
-            }
-        }, error_fn);
-        setTimeout(stop_search,30000); // we only search for 30 seconds
-      }
-      else {
-        $('#infodiv').html('Skale found');
-        connect_to_skale();
-      }
+      ble.startScan([], function(device) {
+          if (device.name=='Skale') {
+            skaleid = device.id;
+            $('#infodiv').html('Skale found');
+            connect_to_skale();
+            ble.stopScan(success_fn,error_fn);
+          }
+      }, error_fn);
+      setTimeout(stop_search,60000); // we only search for 60 seconds
     }
 
     function connect_to_skale() {
       clearTimeout(conn_timer);
 
       ble.connect(skaleid, function() {
-        $('#infodiv').append(' and<br>CONNECTED<br><div id="dots"></div>');
+        $('#infodiv').html('Skale found<br>and connected<br><div id="dots"></div>');
         $('#weight_div').html('0g');
         watch_skale();
       }, function() {
