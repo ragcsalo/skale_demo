@@ -75,6 +75,8 @@
 
     function onDeviceReady() {
 
+alert('1');
+
       storage = window.localStorage;
 
       howtoexit = storage.getItem("howtoexit");
@@ -89,6 +91,8 @@
         skaleid="";
       }
 
+alert('2');
+
       bt_search();
 
       // To exit: swipe UP 3 times with 2 fingers
@@ -102,6 +106,9 @@
         allowPageScroll:'none',
         preventDefaultEvents:false
       });
+
+alert('3');
+
 
     }
 
