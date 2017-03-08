@@ -158,10 +158,11 @@ alert('3');
 
     //======================================================================================================================================================
 
-    var xserv, xcha, actual_value, grams, conn_timer;
+    var bt_service='ff08', bt_channel='ef81', actual_value, grams, conn_timer;
 
     function bt_search() {
-      $('#infodiv').append(txt_bt_search+'<br>');
+      alert('search');
+      $('#infodiv').append(txt_keres+'<br>');
 
       ble.startScan([], function(device) {
           if (device.name=='Skale') {
@@ -179,7 +180,7 @@ alert('3');
     function connecting() {
       clearTimeout(conn_timer);
 
-      $('#infodiv').append(txt_connecting+'<br>');
+      $('#infodiv').append(txt_kapcsolodik+'<br>');
 
       ble.connect(skaleid, function() {
         stop_search();
@@ -199,17 +200,15 @@ alert('3');
     }
 
     function disconn() {
-      ble.stopNotification(skaleid, xserv, xcha, success_fn, error_fn);
+      ble.stopNotification(skaleid, bt_service, bt_channel, success_fn, error_fn);
       ble.disconnect(skaleid);
     }
 
     function watch_skale(serv,cha) {
-      bt_service = 'ff08';
-      bt_channel = 'ef81';
-      ble.startNotification(skaleid, bt_service, bt_channel, function(what) {
+      ble.startNotification(skaleid, bt_service, bt_channel, function(result) {
         
         // Here we convert the data received from Skale:
-        var data = new Uint8Array(what);
+        var data = new Uint8Array(result);
         actual_value = data[1]+256*data[2];
 
         // If value is no more than 2kg:
