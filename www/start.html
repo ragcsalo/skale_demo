@@ -165,15 +165,6 @@
       $('#infodiv').append('<br>');
       ble.startNotification(skaleid, bt_service, bt_channel, function(result) {
         
-        dots+=1;
-        if (dots<=15) {
-          $('#dots').append('.');
-        }
-        else {
-          $('#dots').html('.');
-          dots=1;
-        }
-        
         // Here we convert the data received from Skale:
         var data = new Uint8Array(result);
         actual_value = data[1]+256*data[2];
@@ -185,9 +176,19 @@
             grams=0;
           }
           $('#weight_div').html(grams+'g');
-          if (grams==0 && dots==3) {
+          if (grams==0) {
             dots=0;
             $('#dots').html('');
+          }
+          else {
+            dots+=1;
+            if (dots<=15) {
+              $('#dots').append('.');
+            }
+            else {
+              $('#dots').html('.');
+              dots=1;
+            }
           }
         }
         else {
