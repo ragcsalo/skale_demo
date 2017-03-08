@@ -123,7 +123,6 @@
           if (device.name=='Skale') {
             skaleid = device.id;
             $('#infodiv').html('Skale found');
-            storage.setItem("skaleid",skaleid);
             connect_to_skale();
             ble.stopScan(success_fn,error_fn);
           }
@@ -133,8 +132,6 @@
 
     function connect_to_skale() {
       clearTimeout(conn_timer);
-
-      //$('#infodiv').append('connecting...<br>');
 
       ble.connect(skaleid, function() {
         $('#infodiv').append(' and<br>CONNECTED');
@@ -190,9 +187,9 @@
 <body style="background:#000000; font-size:20pt; width:100%; height:100%; overflow:hidden; position:fixed; margin:0px; padding:0px; border:0px; font-family:Helvetica">
 
   <div id="mainpage" style="width:100%; height:100%; background:#000000; color:white; padding:20px">
-    <div id="weight_div" style="width:100%; height:30%; text-align:center; font-size:40pt; padding-top:30px">Skale DEMO</div>
-    <div id="infodiv" style="width:100%; height:40%; text-align:center; font-size:24pt; line-height:30pt; padding-top:20px"></div>
-    <div style="width:100%; height:30%; text-align:center; font-size:10pt; padding-top:10px; color:#aeaeae"><hr><br><br>Swipe UP with 2 fingers to exit!</div>
+    <div id="weight_div" style="width:100%; height:30%; text-align:center; font-size:40pt; padding-top:30px"></div>
+    <div id="infodiv" style="width:100%; height:50%; text-align:center; font-size:24pt; line-height:30pt; padding-top:20px"></div>
+    <div style="width:100%; height:20%; text-align:center; font-size:11pt; padding-top:10px; color:#aeaeae"><hr><br>Swipe UP with 2 fingers to exit</div>
   </div>
    
 </body>
