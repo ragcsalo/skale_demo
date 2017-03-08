@@ -214,7 +214,13 @@
           if (grams<2000) {
             $('#weight_div').html('<br><div id="gr" style="font-size:36pt; color:white; z-index:6000">'+grams+'g</div>'+'<br><br>');
           }
+          else {
+            $('#weight_div').html('<br><div id="gr" style="font-size:36pt; color:white; z-index:6000">invalid data #1</div>'+'<br><br>');
+          }
 
+        }
+        else {
+          $('#weight_div').html('<br><div id="gr" style="font-size:36pt; color:white; z-index:6000">invalid data #2</div>'+'<br><br>');
         }
       }, error_fn);
     }
