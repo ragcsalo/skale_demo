@@ -162,7 +162,10 @@
     }
 
     function watch_skale() {
+      $('#infodiv').append('<br>+');
       ble.startNotification(skaleid, bt_service, bt_channel, function(result) {
+        
+        $('#infodiv').append('.');
         
         // Here we convert the data received from Skale:
         var data = new Uint8Array(result);
